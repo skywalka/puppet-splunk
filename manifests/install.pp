@@ -1,23 +1,27 @@
 class splunk::install (
-  $license     = $::splunk::license,
-  $pkgname     = $::splunk::pkgname,
-  $splunkadmin = $::splunk::splunkadmin,
-  $localusers  = $::splunk::localusers,
-  $SPLUNKHOME  = $::splunk::SPLUNKHOME,
-  $type        = $::splunk::type,
-  $version     = $::splunk::version,
+  $license          = $::splunk::license,
+  $pkgname          = $::splunk::pkgname,
+  $splunkadmin      = $::splunk::splunkadmin,
+  $localusers       = $::splunk::localusers,
+  $SPLUNKHOME       = $::splunk::SPLUNKHOME,
+  $type             = $::splunk::type,
+  $version          = $::splunk::version,
+  $package_source   = $::splunk::package_source,
+  $package_provider = $::splunk::package_provider,
   ) {
 
-  package { "${pkgname}":
+  package { $pkgname:
     ensure   => $version,
-  } ->
+    provider => $package_provider,
+    source   => $package_source,
+  }->
 
   file { '/etc/init.d/splunk':
-    ensure  => present,
-    mode    => '0700',
-    owner   => 'root',
-    group   => 'root',
-    source  => "puppet:///modules/splunk/${::osfamily}/etc/init.d/${pkgname}"
+    ensure => present,
+    mode   => '0700',
+    owner  => 'root',
+    group  => 'root',
+    source => "puppet:///modules/splunk/${::osfamily}/etc/init.d/${pkgname}"
   } ->
 
   # inifile
@@ -37,21 +41,21 @@ class splunk::install (
   } ->
 
   file { "${SPLUNKHOME}/etc/splunk.license":
-    ensure  => present,
-    mode    => '0644',
-    owner   => 'splunk',
-    group   => 'splunk',
-    backup  => true,
-    source  => $license,
+    ensure => present,
+    mode   => '0644',
+    owner  => 'splunk',
+    group  => 'splunk',
+    backup => true,
+    source => $license,
   } ->
 
   file { "${SPLUNKHOME}/etc/passwd":
-    ensure   => present,
-    mode     => '0600',
-    owner    => 'root',
-    group    => 'root',
-    backup   => true,
-    content  => template('splunk/opt/splunk/etc/passwd.erb'),
+    ensure  => present,
+    mode    => '0600',
+    owner   => 'root',
+    group   => 'root',
+    backup  => true,
+    content => template('splunk/opt/splunk/etc/passwd.erb'),
   } ->
 
   # recursively copy the contents of the auth dir
