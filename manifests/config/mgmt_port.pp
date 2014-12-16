@@ -1,6 +1,6 @@
 #Private Class to enable/disable the Splunk Managment Port
 class splunk::config::mgmt_port (
-  $disableDefaultPort = 'True',
+  $disableDefaultPort = 'False',
   $SPLUNKHOME         = $::splunk::SPLUNKHOME
   ) {
   ini_setting { 'Configure Management Port':
