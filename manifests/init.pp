@@ -118,10 +118,10 @@ class splunk (
       $SPLUNKHOME = '/opt/splunkforwarder'
       $license    = undef
     }
-    'hfw','lwf': {
+    'hwf','lwf': {
       $SPLUNKHOME = '/opt/splunk'
       $pkgname    = 'splunk'
-      $license    = 'puppet:///modules/splunk/noarch/opt/splunk/etc/splunk-forwarder.license'
+      $license    = undef
     }
     default: {
       $SPLUNKHOME = '/opt/splunk'
@@ -154,11 +154,10 @@ class splunk (
         class { 'splunk::config::remove_uf': }
       }
       'hwf': {
-        fail("Server type: ${type} feature has not yet been implemented")
-        #class { 'splunk::outputs': }
-        #class { 'splunk::config::lwf': status => 'disabled' }
-        #class { 'splunk::config::mgmt_port': }
-        #class { 'splunk::config::hwf': }
+        class { 'splunk::outputs': }
+        class { 'splunk::config::lwf': status => 'disabled' }
+        class { 'splunk::config::mgmt_port': }
+        class { 'splunk::config::hwf': }
 
 
         #class { 'splunk::app'                 : }
