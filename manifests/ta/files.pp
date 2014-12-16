@@ -40,6 +40,8 @@ define splunk::ta::files (
   } ->
   file { "${SPLUNKHOME}/etc/apps/${title}/local":
     ensure => directory,
+    owner   => 'splunk',
+    group   => 'splunk',
   } ->
   file { "${SPLUNKHOME}/etc/apps/${title}/local/app.conf":
     ensure  => file,
@@ -49,20 +51,36 @@ define splunk::ta::files (
     require => Class['splunk::install'],
     notify  => Class['splunk::service'],
   } ->
-  file { "${SPLUNKHOME}/etc/apps/${title}/local/inputs.conf":
-    ensure  => present,
-    owner   => 'splunk',
-    group   => 'splunk',
-    content => template($inputfile),
-    require => Class['splunk::install'],
-    notify  => Class['splunk::service'],
-  } ->
   ini_setting { "Enable Splunk ${title} TA":
     ensure  => present,
     path    => "${SPLUNKHOME}/etc/apps/${title}/local/app.conf",
     section => 'install',
     setting => 'state',
     value   => $status,
+    require => Class['splunk::install'],
+    notify  => Class['splunk::service'],
+  }
+  file { "${SPLUNKHOME}/etc/apps/${title}/local/outputs.conf":
+    ensure  => present,
+    owner   => 'splunk',
+    group   => 'splunk',
+    source  => 'puppet:///modules/splunk/ta/TA_dc/local/outputs.conf',
+    require => Class['splunk::install'],
+    notify  => Class['splunk::service'],
+  }
+  file { "${SPLUNKHOME}/etc/apps/${title}/local/indexes.conf":
+    ensure  => present,
+    owner   => 'splunk',
+    group   => 'splunk',
+    source  => 'puppet:///modules/splunk/ta/TA_dc/local/indexes.conf',
+    require => Class['splunk::install'],
+    notify  => Class['splunk::service'],
+  }
+  file { "${SPLUNKHOME}/etc/apps/${title}/local/props.conf":
+    ensure  => present,
+    owner   => 'splunk',
+    group   => 'splunk',
+    source  => 'puppet:///modules/splunk/ta/TA_dc/local/props.conf',
     require => Class['splunk::install'],
     notify  => Class['splunk::service'],
   }
