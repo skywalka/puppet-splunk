@@ -53,13 +53,13 @@ class splunk::outputs (
 
 
 
-  file { "${path}/outputs.conf":
-    ensure  => file,
-    owner   => 'splunk',
-    group   => 'splunk',
-    mode    => '0644',
-    backup  => true,
-    content => template('splunk/opt/splunk/etc/system/local/outputs.conf.erb'),
-    notify  => Class['splunk::service']
-  }
+  #file { "${path}/outputs.conf":
+  #  ensure  => file,
+  #  owner   => 'splunk',
+  #  group   => 'splunk',
+  #  mode    => '0644',
+  #  backup  => true,
+  #  content => template('splunk/opt/splunk/etc/system/local/outputs.conf.erb'),
+  #  notify  => Class['splunk::service']
+  #}
 }
